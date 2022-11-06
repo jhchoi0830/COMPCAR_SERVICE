@@ -1,4 +1,7 @@
-from fastapi import FastAPI
+# import modules
+from fastapi import FastAPI, HTTPException
+# import model
+
 
 app = FastAPI()
 
