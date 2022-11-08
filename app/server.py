@@ -1,4 +1,4 @@
-# import modules
+# import fastapi modules
 from fastapi import FastAPI, HTTPException
 
 # import model
@@ -8,14 +8,11 @@ from models.userModel import User
 # import database functions
 from services.database import fetch_all_cars
 
+# import routers
+from endpoints import carRoutes, userRoutes
+
 app = FastAPI()
 
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-@app.get("/api/car")
-async def get_todo():
-    response = await fetch_all_cars()
-    return response
+# connect router with endpoints
+app.include_router(carRoutes.router)
+app.include_router(userRoutes.router)
