@@ -16,3 +16,23 @@ async def fetch_all_cars():
         cars.append(UsedCar(**document))
     return cars
 
+async def fetch_car_by_make(make):
+    cars = []
+    cursor = carCollection.find({"make":make})
+    async for document in cursor:
+        cars.append(document)
+    return cars
+
+async def fetch_car_by_model(model):
+    cars = []
+    cursor = carCollection.find({"model":{'$regex': '.*'+ model + '.*'}})
+    async for document in cursor:
+        cars.append(document)
+    return cars
+
+async def fetch_car_by_color(color):
+    cars = []
+    cursor = carCollection.find({"color":color})
+    async for document in cursor:
+        cars.append(document)
+    return cars

@@ -5,9 +5,6 @@ from fastapi import FastAPI, HTTPException
 from models.usedCarModel import UsedCar
 from models.userModel import User
 
-# import database functions
-from services.database import fetch_all_cars
-
 # import routers
 from endpoints import carRoutes, userRoutes
 
