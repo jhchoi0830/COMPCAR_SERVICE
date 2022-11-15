@@ -4,10 +4,12 @@ from models.userModel import User
 
 from motor import motor_asyncio
 
+
 client = motor_asyncio.AsyncIOMotorClient('mongodb://localhost:27017/')
 database = client.CompCar
 carCollection = database.usedCar
 userCollection = database.user
+
 
 async def fetch_all_cars() -> list:
     cars = []
@@ -16,12 +18,14 @@ async def fetch_all_cars() -> list:
         cars.append(UsedCar(**document))
     return cars
 
-async def fetch_car_by_make(make: str) -> list:
+
+async def fetch_car_by_maker(maker: str) -> list:
     cars = []
-    cursor = carCollection.find({"make":make})
+    cursor = carCollection.find({"maker":maker})
     async for document in cursor:
         cars.append(document)
     return cars
+
 
 async def fetch_car_by_model(model: str) -> list:
     cars = []
@@ -29,6 +33,7 @@ async def fetch_car_by_model(model: str) -> list:
     async for document in cursor:
         cars.append(document)
     return cars
+
 
 async def fetch_car_by_color(color: str) -> list:
     cars = []
