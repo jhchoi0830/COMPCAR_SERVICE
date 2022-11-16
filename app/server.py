@@ -3,7 +3,7 @@ from fastapi import FastAPI
 
 
 # import routers
-from endpoints import carRoutes, userRoutes
+from app.endpoints import carRoutes, userRoutes
 
 
 app = FastAPI()

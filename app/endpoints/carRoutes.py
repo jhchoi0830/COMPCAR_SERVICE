@@ -3,12 +3,12 @@ from fastapi import HTTPException, APIRouter
 
 
 # import model
-from models.usedCarModel import UsedCar
-from models.userModel import User
+from app.models.usedCarModel import UsedCar
+from app.models.userModel import User
 
 
 # import database functions
-from services.database import (
+from app.services.database import (
     fetch_all_cars,
     fetch_car_by_maker,
     fetch_car_by_model,

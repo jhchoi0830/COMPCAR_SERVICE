@@ -1,6 +1,6 @@
 # import model
-from models.usedCarModel import UsedCar
-from models.userModel import User
+from app.models.usedCarModel import UsedCar
+from app.models.userModel import User
 
 from motor import motor_asyncio
 
