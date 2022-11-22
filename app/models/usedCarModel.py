@@ -6,7 +6,7 @@ class PriceData(BaseModel):
   price: int
 
 class UsedCar(BaseModel):
-  make: str
+  maker: str
   model: str
   madeYear: int
   mileage: int
