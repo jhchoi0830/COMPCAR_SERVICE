@@ -13,6 +13,7 @@ from app.services.database import (
     fetch_car_by_maker,
     fetch_car_by_model,
     fetch_car_by_color,
+    fetch_kijiji_cars
     )
 
 
@@ -27,6 +28,12 @@ async def root():
 @router.get("/api/car")
 async def get_car() -> list:
     response = await fetch_all_cars()
+    return response
+
+
+@router.get("/api/kijijiCar")
+async def get_kijiji_car() -> list:
+    response = await fetch_kijiji_cars()
     return response
 
 
