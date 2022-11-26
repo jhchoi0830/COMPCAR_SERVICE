@@ -7,12 +7,12 @@ from dotenv import load_dotenv
 import os
 
 
-load_dotenv()
-mongoUser = os.getenv("MONGO_USER")
-mongoPassword = os.getenv("MONGO_PASSWORD")
+#load_dotenv()
+#mongoUser = os.getenv("MONGO_USER")
+#mongoPassword = os.getenv("MONGO_PASSWORD")
 
 
-client = motor_asyncio.AsyncIOMotorClient(f'mongodb+srv://{mongoUser}:{mongoPassword}@cluster0.sstu5.mongodb.net/test')
+client = motor_asyncio.AsyncIOMotorClient(f'mongodb+srv://shlee1234:shlee1234@cluster0.sstu5.mongodb.net/test')
 database = client.CompCar
 carCollection = database.usedCar
 userCollection = database.user
