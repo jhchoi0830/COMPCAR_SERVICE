@@ -2,7 +2,7 @@
 from fastapi import FastAPI, HTTPException, APIRouter
 
 # import model
-from app.models.usedCarModel import UsedCar
-from app.models.userModel import User
+from app.models.UsedCarModel import UsedCar
+from app.models.UserModel import User
 
 router = APIRouter()
