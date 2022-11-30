@@ -1,34 +1,29 @@
 # import model
-from app.models.usedCarModel import UsedCar
-from app.models.userModel import User
+from app.models.UsedCarModel import UsedCar
+from app.models.UserModel import User
+from app.models.KijijiCar import KijijiCar
 
-from motor import motor_asyncio
-from dotenv import load_dotenv
-import os
-
-
-load_dotenv()
-mongoUser = os.getenv("MONGO_USER")
-mongoPassword = os.getenv("MONGO_PASSWORD")
-
-
-client = motor_asyncio.AsyncIOMotorClient(f'mongodb+srv://{mongoUser}:{mongoPassword}@cluster0.sstu5.mongodb.net/test')
-database = client.CompCar
-carCollection = database.usedCar
-userCollection = database.user
-
+from app.services.connect import car_collection, kijiji_car_collection
 
 async def fetch_all_cars() -> list:
     cars = []
-    cursor = carCollection.find({})
+    cursor = car_collection.find({})
     async for document in cursor:
         cars.append(UsedCar(**document))
     return cars
 
 
+async def fetch_kijiji_cars() -> list:
+    cars = []
+    cursor = kijiji_car_collection.find({})
+    async for document in cursor:
+        cars.append(KijijiCar(**document))
+    return cars
+
+
 async def fetch_car_by_maker(maker: str) -> list:
     cars = []
-    cursor = carCollection.find({"maker":maker})
+    cursor = car_collection.find({"maker":maker})
     async for document in cursor:
         cars.append(document)
     return cars
@@ -36,7 +31,7 @@ async def fetch_car_by_maker(maker: str) -> list:
 
 async def fetch_car_by_model(model: str) -> list:
     cars = []
-    cursor = carCollection.find({"model":{'$regex': '.*'+ model + '.*'}})
+    cursor = car_collection.find({"model":{'$regex': '.*'+ model + '.*'}})
     async for document in cursor:
         cars.append(document)
     return cars
@@ -44,7 +39,7 @@ async def fetch_car_by_model(model: str) -> list:
 
 async def fetch_car_by_color(color: str) -> list:
     cars = []
-    cursor = carCollection.find({"color":color})
+    cursor = car_collection.find({"color":color})
     async for document in cursor:
         cars.append(document)
     return cars
