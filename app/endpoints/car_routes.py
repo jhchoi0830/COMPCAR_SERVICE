@@ -3,8 +3,8 @@ from fastapi import HTTPException, APIRouter
 
 
 # import model
-from app.models.UsedCarModel import UsedCar
-from app.models.UserModel import User
+from app.models.usedCarModel import UsedCar
+from app.models.userModel import User
 
 
 # import database functions
