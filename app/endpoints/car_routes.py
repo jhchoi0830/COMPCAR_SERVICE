@@ -13,7 +13,10 @@ from app.services.database import (
     fetch_car_by_maker,
     fetch_car_by_model,
     fetch_car_by_color,
-    fetch_kijiji_cars
+    fetch_kijiji_cars,
+    fetch_car_by_year,
+    fetch_car_by_mileage,
+    fetch_car_by_price
     )
 
 
@@ -59,3 +62,24 @@ async def get_car_by_color(color: str) -> list:
     if response:
         return response
     raise HTTPException(404, f"There is no car with the color {color}")
+
+@router.get("/api/car/years/{year}", response_model=list[UsedCar])
+async def get_car_by_year(year: int) -> list:
+    response = await fetch_car_by_year(year)
+    if response:
+        return response
+    raise HTTPException(404, f"There is no car with the year {year}")
+
+@router.get("/api/car/mileage/{id}", response_model=list[UsedCar])
+async def get_car_by_mileage(id: int) -> list:
+    response = await fetch_car_by_mileage(id)
+    if response:
+        return response
+    raise HTTPException(404, f"There is no car with the mileage")
+
+@router.get("/api/car/price/{id}", response_model=list[UsedCar])
+async def get_car_by_price(id: int) -> list:
+    response = await fetch_car_by_price(id)
+    if response:
+        return response
+    raise HTTPException(404, f"There is no car with the price")
