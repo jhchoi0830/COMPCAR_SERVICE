@@ -50,7 +50,7 @@ async def get_car_by_model(model: str) -> list:
     response = await fetch_car_by_model(model)
     if response:
         return response
-    raise HTTPException(404, f"There is no car with the make {model}")
+    raise HTTPException(404, f"There is no car with the model {model}")
 
 
 @router.get("/api/car/colors/{color}", response_model=list[UsedCar])
@@ -58,4 +58,4 @@ async def get_car_by_color(color: str) -> list:
     response = await fetch_car_by_color(color)
     if response:
         return response
-    raise HTTPException(404, f"There is no car with the make {color}")
+    raise HTTPException(404, f"There is no car with the color {color}")
