@@ -43,3 +43,24 @@ async def fetch_car_by_color(color: str) -> list:
     async for document in cursor:
         cars.append(document)
     return cars
+
+async def fetch_car_by_year(year: int) -> list:
+    cars = []
+    cursor = car_collection.find({"madeYear":year})
+    async for document in cursor:
+        cars.append(document)
+    return cars
+
+async def fetch_car_by_mileage(id: int) -> list:
+    cars = []
+    cursor = car_collection.find({"mileage": {'$gt':(id-1)*50000,'$lt':id*50000}})
+    async for document in cursor:
+        cars.append(document)
+    return cars
+
+async def fetch_car_by_price(id: int) -> list:
+    cars = []
+    cursor = car_collection.find({"price.price": {'$gt':(id-1)*10000,'$lt':id*10000} })
+    async for document in cursor:
+        cars.append(document)
+    return cars
