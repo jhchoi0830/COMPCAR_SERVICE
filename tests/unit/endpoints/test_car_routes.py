@@ -1,5 +1,5 @@
-from fastapi.testclient import TestClient
 import requests
+from fastapi.testclient import TestClient
 
 
 def test_get_root():
