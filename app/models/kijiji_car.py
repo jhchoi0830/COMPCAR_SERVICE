@@ -3,8 +3,8 @@ from pydantic import BaseModel
 
 
 class KijijiCar(BaseModel):
-  car_info: str
-  url: str
-  mileage: str
-  region: str
-  price: str
+    car_info: str
+    url: str
+    mileage: str
+    region: str
+    price: str
