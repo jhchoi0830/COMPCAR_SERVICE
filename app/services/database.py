@@ -46,25 +46,7 @@ async def fetch_car_by_color(color: str) -> list:
     return cars
 
 
-async def fetch_all_users() -> list:
-    users = []
-    cursor = user_collection.find({})
-    async for document in cursor:
-        users.append(User(**document))
-    return users
-
-
-async def fetch_user_by_email(email: str) -> list:
-    users = []
-    cursor = user_collection.find({"email":{'$regex': '.*'+ email + '.*'}})
-    async for document in cursor:
-        users.append(document)
-    return users
-
-async def fetch_user_by_password(password: str) -> list:
-    users = []
-    cursor = user_collection.find({"password":{'$regex': '.*'+ password + '.*'}})
-    async for document in cursor:
-        users.append(document)
-    return users
-
+async def create_user(user: User):
+    result = await user_collection.insert_one(user)
+    created_user = await user_collection.find_one({'_id': result.inserted_id})
+    return created_user
