@@ -45,12 +45,6 @@ async def fetch_car_by_color(color: str) -> list:
         cars.append(document)
     return cars
 
-
-async def create_user(user: User):
-    result = await user_collection.insert_one(user)
-    created_user = await user_collection.find_one({'_id': result.inserted_id})
-    return created_user
-
 async def fetch_car_by_year(year: int) -> list:
     cars = []
     cursor = car_collection.find({"madeYear":year})
@@ -71,3 +65,9 @@ async def fetch_car_by_price(id: int) -> list:
     async for document in cursor:
         cars.append(document)
     return cars
+
+async def create_user(user: User):
+    result = await user_collection.insert_one(user)
+    created_user = await user_collection.find_one({'_id': result.inserted_id})
+    return created_user
+
