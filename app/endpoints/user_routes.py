@@ -10,8 +10,6 @@ router = APIRouter()
 
 @router.post('/api/user/register', response_model=User)
 async def post_user(user: User):
-    print('PRINT:::::: user ======')
-    print(user)
     response = await create_user(user.dict())
     if response:
         return response
