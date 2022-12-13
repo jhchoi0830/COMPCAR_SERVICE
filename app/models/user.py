@@ -1,5 +1,6 @@
 # Pydantic allows auto creation of JSON Schemas from models
 from pydantic import BaseModel
+from typing import Optional, List
 
 
 class FavCar(BaseModel):
@@ -11,4 +12,4 @@ class FavCar(BaseModel):
 class User(BaseModel):
     email: str
     password: str
-    favouriteCar: list[FavCar]
+    favouriteCar: Optional[List[FavCar]] = None

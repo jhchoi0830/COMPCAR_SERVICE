@@ -3,6 +3,7 @@ from app.models.user import User
 from app.models.kijiji_car import KijijiCar
 
 from app.services.connect import car_collection, kijiji_car_collection
+from app.services.connect import user_collection
 
 
 async def fetch_all_cars() -> list:
@@ -67,3 +68,9 @@ async def fetch_car_by_price(id: int) -> list:
     async for document in cursor:
         cars.append(document)
     return cars
+
+
+async def create_user(user: User):
+    result = await user_collection.insert_one(user)
+    created_user = await user_collection.find_one({'_id': result.inserted_id})
+    return created_user
