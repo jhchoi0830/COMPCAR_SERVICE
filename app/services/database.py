@@ -1,9 +1,9 @@
-# import model
-from app.models.UsedCarModel import UsedCar
-from app.models.UserModel import User
-from app.models.KijijiCar import KijijiCar
+from app.models.used_car import UsedCar
+from app.models.user import User
+from app.models.kijiji_car import KijijiCar
 
 from app.services.connect import car_collection, kijiji_car_collection
+
 
 async def fetch_all_cars() -> list:
     cars = []
@@ -44,6 +44,7 @@ async def fetch_car_by_color(color: str) -> list:
         cars.append(document)
     return cars
 
+
 async def fetch_car_by_year(year: int) -> list:
     cars = []
     cursor = car_collection.find({"madeYear":year})
@@ -51,12 +52,14 @@ async def fetch_car_by_year(year: int) -> list:
         cars.append(document)
     return cars
 
+
 async def fetch_car_by_mileage(id: int) -> list:
     cars = []
     cursor = car_collection.find({"mileage": {'$gt':(id-1)*50000,'$lt':id*50000}})
     async for document in cursor:
         cars.append(document)
     return cars
+
 
 async def fetch_car_by_price(id: int) -> list:
     cars = []

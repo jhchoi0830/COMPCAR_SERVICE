@@ -1,13 +1,7 @@
-# import fastapi modules
 from fastapi import HTTPException, APIRouter
 
-
-# import model
-from app.models.UsedCarModel import UsedCar
-from app.models.UserModel import User
-
-
-# import database functions
+from app.models.used_car import UsedCar
+from app.models.user import User
 from app.services.database import (
     fetch_all_cars,
     fetch_car_by_maker,
@@ -16,8 +10,8 @@ from app.services.database import (
     fetch_kijiji_cars,
     fetch_car_by_year,
     fetch_car_by_mileage,
-    fetch_car_by_price
-    )
+    fetch_car_by_price,
+)
 
 
 router = APIRouter()
