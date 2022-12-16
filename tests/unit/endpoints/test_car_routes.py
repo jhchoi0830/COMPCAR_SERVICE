@@ -13,7 +13,7 @@ def test_get_cars():
     response_body = response.json()
     assert response.status_code == 200
     assert response.headers["Content-Type"] == "application/json"
-    assert len(response_body) == 500
+    assert len(response_body) == 517
 
 
 def test_get_kijiji_cars():
@@ -25,21 +25,21 @@ def test_get_kijiji_cars():
 
 
 def test_get_car_by_maker():
-    response = requests.get("http://127.0.0.1:8000/api/car/makers/toyota")
+    response = requests.get("http://127.0.0.1:8000/api/car/makers/Toyota")
     response_body = response.json()
     assert response.status_code == 200
     assert response.headers["Content-Type"] == "application/json"
     for car in response_body:
-        assert car['maker'] == 'toyota'
+        assert car['maker'] == 'Toyota'
 
 
 def test_get_car_by_model():
-    response = requests.get("http://127.0.0.1:8000/api/car/models/forte")
+    response = requests.get("http://127.0.0.1:8000/api/car/models/Trailblazer")
     response_body = response.json()
     assert response.status_code == 200
     assert response.headers["Content-Type"] == "application/json"
     for car in response_body:
-        assert 'forte' in car['model']
+        assert 'Trailblazer' in car['model']
 
 
 def test_get_car_by_color():
