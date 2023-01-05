@@ -30,6 +30,41 @@ async def fetch_car_by_maker(maker: str) -> list:
     return cars
 
 
+async def fetch_car_for_graph(maker: str) -> list:
+    cars = []
+    model_list = []
+    data_list = []
+    cursor = car_collection.find({"maker":maker})
+    async for document in cursor:
+        cars.append(document)
+        model_list.append(document['model'])
+        data_list.append([document['model'],document['madeYear'],document['mileage'], document['price'][0]['price']])
+
+    model_list = list(set(model_list))
+
+    filtered_list = []
+    for model in model_list:
+        filtered_data = []
+        for data in data_list:
+            if data[0] == model:
+                filtered_data.append({
+                    'year': data[1],
+                    'price': data[2],
+                    'mileage': data[3]
+                })
+        filtered_list.append(filtered_data)
+    print(filtered_list)
+
+    graph_list = []
+    for i in range(0,len(model_list)):
+        graph_list.append({
+            'name': maker + " " + model_list[i],
+            'data': filtered_list[i]
+        })
+
+    return graph_list
+
+
 async def fetch_car_by_model(model: str) -> list:
     cars = []
     cursor = car_collection.find({"model":{'$regex': '.*'+ model + '.*'}})
