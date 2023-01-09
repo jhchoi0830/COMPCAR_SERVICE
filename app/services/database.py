@@ -49,11 +49,10 @@ async def fetch_car_for_graph(maker: str) -> list:
             if data[0] == model:
                 filtered_data.append({
                     'year': data[1],
-                    'price': data[2],
-                    'mileage': data[3]
+                    'price': data[3],
+                    'mileage': data[2]
                 })
         filtered_list.append(filtered_data)
-    print(filtered_list)
 
     graph_list = []
     for i in range(0,len(model_list)):
