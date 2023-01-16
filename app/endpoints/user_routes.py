@@ -16,7 +16,7 @@ router = APIRouter()
 async def create_user(request:User):
     if await register_user(request):
         return {"res":"created"}
-    return {"res":"ID not created"}
+    return {"message":"ID not created", "status-code":"Error Code 404"}
 
 
 @router.post('/api/user/login')

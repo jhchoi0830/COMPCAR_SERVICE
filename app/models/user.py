@@ -27,3 +27,8 @@ class Token(BaseModel):
     
 class TokenData(BaseModel):
     username: Optional[str] = None
+
+class Settings(BaseModel):
+    authjwt_secret_key: str = "secret"
+    authjwt_token_location: set = {"cookies"}
+    authjwt_cookie_csrf_protect: bool = False
