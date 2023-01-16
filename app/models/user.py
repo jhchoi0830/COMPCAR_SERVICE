@@ -4,9 +4,11 @@ from typing import Optional, List
 
 
 class FavCar(BaseModel):
-    make: str
+    maker: str
     model: str
-    madeYear: str
+    madeYear: int
+    mileage: int
+    price: int
 
 
 class User(BaseModel):
