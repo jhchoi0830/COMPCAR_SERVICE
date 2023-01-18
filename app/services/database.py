@@ -112,7 +112,7 @@ async def create_user(user: User):
     return created_user
 
 
-async def add_fav_car(user_id:str ,fav_car: FavCar):
+async def add_fav_car(user_id:str ,fav_car: FavCar) -> object:
     current_user = await user_collection.find_one({"_id":ObjectId(user_id)})
     if (current_user['favouriteCar'].count(fav_car) == 0):
         current_user['favouriteCar'].append(fav_car)
@@ -120,9 +120,13 @@ async def add_fav_car(user_id:str ,fav_car: FavCar):
     return current_user
 
 
-async def delete_fav_car(user_id:str ,fav_car: FavCar):
+async def delete_fav_car(user_id:str ,fav_car: FavCar) -> object:
     current_user = await user_collection.find_one({"_id":ObjectId(user_id)})
     if fav_car in current_user['favouriteCar']:
         current_user['favouriteCar'].remove(fav_car)
     result = await user_collection.replace_one({"_id":ObjectId(user_id)},current_user)
     return current_user
+
+async def fetch_fav_car(user_id:str) -> list:
+    current_user = await user_collection.find_one({"_id":ObjectId(user_id)})
+    return current_user['favouriteCar']

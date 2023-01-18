@@ -7,7 +7,8 @@ router = APIRouter()
 from app.services.database import (
     create_user,
     add_fav_car,
-    delete_fav_car
+    delete_fav_car,
+    fetch_fav_car
 )
 
 router = APIRouter()
@@ -35,3 +36,10 @@ async def remove_fav_car(user_id:str, fav_car:FavCar):
     if response:
         return response
     raise HTTPException(400, "There is no user which has user_id")
+
+@router.get('/api/user/favcar/{user_id}', response_model=list[FavCar])
+async def get_fav_car(user_id:str):
+    response = await fetch_fav_car(user_id)
+    if response:
+        return response
+    raise HTTPException(400, "There is no favourite car information")
