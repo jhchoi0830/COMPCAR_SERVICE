@@ -14,11 +14,11 @@ class User(BaseModel):
     password: str
     favouriteCar: Optional[List[FavCar]] = None
 
-class Setting(BaseModel):
+class Settings(BaseModel):
     authjwt_secret_key: str = "secret"
     authjwt_token_location: set = {"cookies"}
     authjwt_cookie_secure: bool = False
-    authjwt_cookie_csrf_protect: bool = True
+    #authjwt_cookie_csrf_protect: bool = True
     # Change to 'lax' in production to make your website more secure from CSRF Attacks, default is None
     # authjwt_cookie_samesite: str = 'lax
 
@@ -35,8 +35,3 @@ class Token(BaseModel):
     
 class TokenData(BaseModel):
     username: Optional[str] = None
-
-class Settings(BaseModel):
-    authjwt_secret_key: str = "secret"
-    authjwt_token_location: set = {"cookies"}
-    authjwt_cookie_csrf_protect: bool = False

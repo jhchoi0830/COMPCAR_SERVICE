@@ -1,5 +1,5 @@
 from app.models.used_car import UsedCar
-from app.models.user import User, Setting
+from app.models.user import User, Settings
 from app.models.kijiji_car import KijijiCar
 from app.services.connect import car_collection, kijiji_car_collection
 from app.services.connect import user_collection
@@ -78,14 +78,7 @@ async def fetch_car_by_price(id: int) -> list:
 
 
 async def get_config():
-    return Setting()
-
-
-async def authjwt_exception_handler(request: Request, exc: AuthJWTException):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={"detail": exc.message}
-    )
+    return Settings()
 
 
 async def register_user(request:User):
@@ -99,8 +92,9 @@ async def login_user(request:OAuth2PasswordRequestForm = Depends()):
     user = await user_collection.find_one({"email":request.username})
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail = f'No user found with this {request.username} username')
-    if not Hash.verify_password(request.password, user["password"]):
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail = f'Wrong Username or password')
-    access_token = create_access_token(data={"sub": user["email"] })
-    return {"access_token": access_token, "token_type": "bearer"}
+    #if not Hash.verify_password(request.password, user["password"]):
+        #raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail = f'Wrong Username or password')
+    #access_token = create_access_token(data={"sub": user["email"] })
+    #return {"access_token": access_token, "token_type": "bearer"}
+    return user
 

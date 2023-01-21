@@ -14,9 +14,14 @@ from fastapi_jwt_auth.exceptions import AuthJWTException
 
 router = APIRouter()
 
+
 @AuthJWT.load_config
 def get_config():
     return Settings()
+
+
+
+
 
 @router.post('/api/user/register')
 async def create_user(request:User):
@@ -26,7 +31,39 @@ async def create_user(request:User):
 
 
 @router.post('/api/user/login')
-async def login(request:OAuth2PasswordRequestForm = Depends()):
-    if await login_user(request):
-        return {"res":"found"}
+async def login(request:OAuth2PasswordRequestForm = Depends(), Authorize: AuthJWT = Depends()):
+    user = await login_user(request)
+    if user:
+        access_token = Authorize.create_access_token(subject=user["email"])
+        refresh_token = Authorize.create_refresh_token(subject=user["email"])
+        #Authorize.set_access_cookies(access_token)
+        #Authorize.set_refresh_cookies(refresh_token)
+        print("access_token")
+        print(access_token)
+        return {"res":"Successfully login"}
     return {"res":"coudln't find"}
+
+
+@router.post('/api/user/refresh')
+async def refresh(Authorize: AuthJWT = Depends()):
+    Authorize.jwt_refresh_token_required()
+    current_user = Authorize.get_jwt_subject()
+    new_access_token = Authorize.create_access_token(subject=current_user)
+    Authorize.set_access_cookies(new_access_token)
+    return {"res":"The token has been refresh"}
+
+
+@router.delete('/api/user/logout')
+def logout(Authorize: AuthJWT = Depends()):
+    Authorize.jwt_required()
+
+    Authorize.unset_jwt_cookies()
+    return {"res":"Successfully logout"}
+
+
+@router.get('/api/user/protected')
+def protected(Authorize: AuthJWT = Depends()):
+    Authorize.jwt_required()
+
+    current_user = Authorize.get_jwt_subject()
+    return {"user": current_user}
