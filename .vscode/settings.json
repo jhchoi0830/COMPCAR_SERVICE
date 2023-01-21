@@ -1,4 +1,3 @@
 {
-  "python.analysis.typeCheckingMode": "basic",
-  "python.analysis.extraPaths": ["app", "another/path/etc"]
+  "python.analysis.typeCheckingMode": "basic"
 }

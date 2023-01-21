@@ -77,10 +77,6 @@ async def fetch_car_by_price(id: int) -> list:
     return cars
 
 
-async def get_config():
-    return Settings()
-
-
 async def register_user(request:User):
     hashed_pass = Hash.get_hash_password(request.password)
     user_object = dict(request)
@@ -88,13 +84,11 @@ async def register_user(request:User):
     user = await user_collection.insert_one(user_object)
     return user
 
-async def login_user(request:OAuth2PasswordRequestForm = Depends()):
-    user = await user_collection.find_one({"email":request.username})
+async def login_user(request):
+    user = await user_collection.find_one({"email":request.email})
     if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail = f'No user found with this {request.username} username')
-    #if not Hash.verify_password(request.password, user["password"]):
-        #raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail = f'Wrong Username or password')
-    #access_token = create_access_token(data={"sub": user["email"] })
-    #return {"access_token": access_token, "token_type": "bearer"}
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail = f'No user found with this {request.email} username')
+    if not Hash.verify_password(request.password, user["password"]):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail = f'Wrong Username or password')
     return user
 

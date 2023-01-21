@@ -20,9 +20,6 @@ def get_config():
     return Settings()
 
 
-
-
-
 @router.post('/api/user/register')
 async def create_user(request:User):
     if await register_user(request):
@@ -31,15 +28,13 @@ async def create_user(request:User):
 
 
 @router.post('/api/user/login')
-async def login(request:OAuth2PasswordRequestForm = Depends(), Authorize: AuthJWT = Depends()):
+async def login(request :User, Authorize: AuthJWT = Depends()):
     user = await login_user(request)
     if user:
         access_token = Authorize.create_access_token(subject=user["email"])
         refresh_token = Authorize.create_refresh_token(subject=user["email"])
-        #Authorize.set_access_cookies(access_token)
-        #Authorize.set_refresh_cookies(refresh_token)
-        print("access_token")
-        print(access_token)
+        Authorize.set_access_cookies(access_token)
+        Authorize.set_refresh_cookies(refresh_token)
         return {"res":"Successfully login"}
     return {"res":"coudln't find"}
 
@@ -56,7 +51,6 @@ async def refresh(Authorize: AuthJWT = Depends()):
 @router.delete('/api/user/logout')
 def logout(Authorize: AuthJWT = Depends()):
     Authorize.jwt_required()
-
     Authorize.unset_jwt_cookies()
     return {"res":"Successfully logout"}
 
@@ -64,6 +58,5 @@ def logout(Authorize: AuthJWT = Depends()):
 @router.get('/api/user/protected')
 def protected(Authorize: AuthJWT = Depends()):
     Authorize.jwt_required()
-
     current_user = Authorize.get_jwt_subject()
     return {"user": current_user}
