@@ -1,12 +1,15 @@
 from app.models.used_car import UsedCar
-from app.models.user import User
+from app.models.user import User, Setting
 from app.models.kijiji_car import KijijiCar
 from app.services.connect import car_collection, kijiji_car_collection
 from app.services.connect import user_collection
 from app.models.hashing import Hash
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi import Depends, status, HTTPException
+from fastapi import Depends, status, HTTPException, Request
 from app.models.jwttoken import create_access_token
+from fastapi.responses import JSONResponse
+from fastapi_jwt_auth import AuthJWT
+from fastapi_jwt_auth.exceptions import AuthJWTException
 
 
 
@@ -72,6 +75,18 @@ async def fetch_car_by_price(id: int) -> list:
     async for document in cursor:
         cars.append(document)
     return cars
+
+
+async def get_config():
+    return Setting()
+
+
+async def authjwt_exception_handler(request: Request, exc: AuthJWTException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.message}
+    )
+
 
 async def register_user(request:User):
     hashed_pass = Hash.get_hash_password(request.password)
