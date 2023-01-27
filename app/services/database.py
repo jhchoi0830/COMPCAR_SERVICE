@@ -94,14 +94,6 @@ async def login_user(request):
     return user
 
 
-async def add_fav_car(user_id:str ,fav_car: FavCar) -> object:
-    current_user = await user_collection.find_one({"_id":ObjectId(user_id)})
-    if (current_user['favouriteCar'].count(fav_car) == 0):
-        current_user['favouriteCar'].append(fav_car)
-    result = await user_collection.replace_one({"_id":ObjectId(user_id)},current_user)
-    return current_user
-
-
 async def delete_fav_car(user_id:str ,fav_car: FavCar) -> object:
     current_user = await user_collection.find_one({"_id":ObjectId(user_id)})
     if fav_car in current_user['favouriteCar']:
