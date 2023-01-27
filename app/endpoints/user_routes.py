@@ -1,45 +1,62 @@
-from fastapi import FastAPI, HTTPException, APIRouter
+from fastapi import FastAPI, HTTPException, APIRouter, status, Depends, Request
+from app.models.user import User, Settings
+from app.models.hashing import Hash
+from app.models.oauth import get_current_user
+from fastapi.middleware.cors import CORSMiddleware
+from app.services.connect import user_collection
+from app.services.database import register_user, login_user
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.responses import JSONResponse
+from fastapi_jwt_auth import AuthJWT
+from fastapi_jwt_auth.exceptions import AuthJWTException
 
-from app.models.user import User, FavCar
+
 
 router = APIRouter()
 
-from app.services.database import (
-    create_user,
-    add_fav_car,
-    delete_fav_car,
-    fetch_fav_car
-)
 
-router = APIRouter()
+@AuthJWT.load_config
+def get_config():
+    return Settings()
 
 
-@router.post('/api/user/register', response_model=User)
-async def post_user(user: User):
-    response = await create_user(user.dict())
-    if response:
-        return response
-    raise HTTPException(400, "Something went wrong")
+@router.post('/api/user/register')
+async def create_user(request:User):
+    if await register_user(request):
+        return {"res":"created"}
+    return {"message":"ID not created", "status-code":"Error Code 404"}
 
 
-@router.post('/api/user/favcar/{user_id}', response_model=User)
-async def post_fav_car(user_id:str, fav_car:FavCar):
-    response = await add_fav_car(user_id, fav_car.dict())
-    if response:
-        return response
-    raise HTTPException(400, "There is no user which has user_id")
+@router.post('/api/user/login')
+async def login(request :User, Authorize: AuthJWT = Depends()):
+    user = await login_user(request)
+    if user:
+        access_token = Authorize.create_access_token(subject=user["email"])
+        refresh_token = Authorize.create_refresh_token(subject=user["email"])
+        Authorize.set_access_cookies(access_token)
+        Authorize.set_refresh_cookies(refresh_token)
+        return {"res":"Successfully login"}
+    return {"res":"coudln't find"}
 
 
-@router.delete('/api/user/favcar/{user_id}', response_model=User)
-async def remove_fav_car(user_id:str, fav_car:FavCar):
-    response = await delete_fav_car(user_id, fav_car.dict())
-    if response:
-        return response
-    raise HTTPException(400, "There is no user which has user_id")
+@router.post('/api/user/refresh')
+async def refresh(Authorize: AuthJWT = Depends()):
+    Authorize.jwt_refresh_token_required()
+    current_user = Authorize.get_jwt_subject()
+    new_access_token = Authorize.create_access_token(subject=current_user)
+    Authorize.set_access_cookies(new_access_token)
+    return {"res":"The token has been refresh"}
 
-@router.get('/api/user/favcar/{user_id}', response_model=list[FavCar])
-async def get_fav_car(user_id:str):
-    response = await fetch_fav_car(user_id)
-    if response:
-        return response
-    raise HTTPException(400, "There is no favourite car information")
+
+@router.delete('/api/user/logout')
+def logout(Authorize: AuthJWT = Depends()):
+    Authorize.jwt_required()
+    Authorize.unset_jwt_cookies()
+    return {"res":"Successfully logout"}
+
+
+@router.get('/api/user/protected')
+def protected(Authorize: AuthJWT = Depends()):
+    Authorize.jwt_required()
+    current_user = Authorize.get_jwt_subject()
+    return {"user": current_user}
