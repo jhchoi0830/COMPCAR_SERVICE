@@ -120,6 +120,22 @@ async def add_fav_car(user_id:str ,fav_car: FavCar) -> object:
     return current_user
 
 
+async def register_user(request:User):
+    hashed_pass = Hash.get_hash_password(request.password)
+    user_object = dict(request)
+    user_object["password"] = hashed_pass
+    user = await user_collection.insert_one(user_object)
+    return user
+
+async def login_user(request):
+    user = await user_collection.find_one({"email":request.email})
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail = f'No user found with this {request.email} username')
+    if not Hash.verify_password(request.password, user["password"]):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail = f'Wrong Username or password')
+    return user
+
+
 async def delete_fav_car(user_id:str ,fav_car: FavCar) -> object:
     current_user = await user_collection.find_one({"_id":ObjectId(user_id)})
     if fav_car in current_user['favouriteCar']:
