@@ -7,10 +7,8 @@ from app.models.kijiji_car import KijijiCar
 from app.services.connect import car_collection, kijiji_car_collection
 from app.services.connect import user_collection
 
-from app.models.hashing import Hash
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import Depends, status, HTTPException, Request
-from app.models.jwttoken import create_access_token
 from fastapi.responses import JSONResponse
 from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import AuthJWTException
@@ -112,23 +110,6 @@ async def fetch_car_by_price(id: int) -> list:
     async for document in cursor:
         cars.append(document)
     return cars
-
-
-async def register_user(request:User):
-    hashed_pass = Hash.get_hash_password(request.password)
-    user_object = dict(request)
-    user_object["password"] = hashed_pass
-    user = await user_collection.insert_one(user_object)
-    return user
-
-async def login_user(request):
-    user = await user_collection.find_one({"email":request.email})
-    if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail = f'No user found with this {request.email} username')
-    if not Hash.verify_password(request.password, user["password"]):
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail = f'Wrong Username or password')
-    return user
-
 
 
 async def add_fav_car(user_id:str ,fav_car: FavCar) -> object:
