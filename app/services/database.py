@@ -1,9 +1,10 @@
 from app.models.used_car import UsedCar
-from app.models.user import User, Settings
+from app.models.user import User, FavCar, Settings
 from app.models.kijiji_car import KijijiCar
 from app.services.connect import car_collection, kijiji_car_collection
 from app.services.connect import user_collection
 from app.models.hashing import Hash
+from bson.objectid import ObjectId
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import Depends, status, HTTPException, Request
 from app.models.jwttoken import create_access_token
@@ -92,3 +93,22 @@ async def login_user(request):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail = f'Wrong Username or password')
     return user
 
+
+async def add_fav_car(user_id:str ,fav_car: FavCar) -> object:
+    current_user = await user_collection.find_one({"_id":ObjectId(user_id)})
+    if (current_user['favouriteCar'].count(fav_car) == 0):
+        current_user['favouriteCar'].append(fav_car)
+    result = await user_collection.replace_one({"_id":ObjectId(user_id)},current_user)
+    return current_user
+
+
+async def delete_fav_car(user_id:str ,fav_car: FavCar) -> object:
+    current_user = await user_collection.find_one({"_id":ObjectId(user_id)})
+    if fav_car in current_user['favouriteCar']:
+        current_user['favouriteCar'].remove(fav_car)
+    result = await user_collection.replace_one({"_id":ObjectId(user_id)},current_user)
+    return current_user
+
+async def fetch_fav_car(user_id:str) -> list:
+    current_user = await user_collection.find_one({"_id":ObjectId(user_id)})
+    return current_user['favouriteCar']
