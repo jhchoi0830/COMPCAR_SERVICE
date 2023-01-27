@@ -1,7 +1,7 @@
 from bson.objectid import ObjectId
 
 from app.models.used_car import UsedCar
-from app.models.user import User, FavCar
+from app.models.user import User, FavCar, Settings
 from app.models.kijiji_car import KijijiCar
 
 from app.services.connect import car_collection, kijiji_car_collection
