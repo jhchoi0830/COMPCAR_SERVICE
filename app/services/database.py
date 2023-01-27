@@ -3,9 +3,17 @@ from bson.objectid import ObjectId
 from app.models.used_car import UsedCar
 from app.models.user import User, FavCar, Settings
 from app.models.kijiji_car import KijijiCar
-
 from app.services.connect import car_collection, kijiji_car_collection
 from app.services.connect import user_collection
+from app.models.hashing import Hash
+from bson.objectid import ObjectId
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import Depends, status, HTTPException, Request
+from app.models.jwttoken import create_access_token
+from fastapi.responses import JSONResponse
+from fastapi_jwt_auth import AuthJWT
+from fastapi_jwt_auth.exceptions import AuthJWTException
+
 
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import Depends, status, HTTPException, Request
