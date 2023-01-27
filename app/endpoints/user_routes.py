@@ -1,7 +1,6 @@
 from fastapi import FastAPI, HTTPException, APIRouter, status, Depends, Request
 from app.models.user import User, Settings
 from app.models.hashing import Hash
-from app.models.oauth import get_current_user
 from fastapi.middleware.cors import CORSMiddleware
 from app.services.connect import user_collection
 from app.services.database import register_user, login_user

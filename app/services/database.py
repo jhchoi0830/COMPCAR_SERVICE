@@ -9,7 +9,6 @@ from app.models.hashing import Hash
 from bson.objectid import ObjectId
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import Depends, status, HTTPException, Request
-from app.models.jwttoken import create_access_token
 from fastapi.responses import JSONResponse
 from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import AuthJWTException
