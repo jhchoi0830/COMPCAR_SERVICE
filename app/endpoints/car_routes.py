@@ -11,6 +11,7 @@ from app.services.database import (
     fetch_car_by_year,
     fetch_car_by_mileage,
     fetch_car_by_price,
+    fetch_car_for_graph,
 )
 
 
@@ -37,6 +38,14 @@ async def get_kijiji_car() -> list:
 @router.get("/api/car/makers/{maker}", response_model=list[UsedCar])
 async def get_car_by_make(maker: str) -> list:
     response = await fetch_car_by_maker(maker)
+    if response:
+        return response
+    raise HTTPException(404, f"There is no car with the maker {maker}")
+
+
+@router.get("/api/car/graph/{maker}", response_model=list)
+async def get_car_for_graph(maker: str) -> list:
+    response = await fetch_car_for_graph(maker)
     if response:
         return response
     raise HTTPException(404, f"There is no car with the maker {maker}")

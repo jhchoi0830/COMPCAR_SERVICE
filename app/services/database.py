@@ -1,3 +1,5 @@
+from bson.objectid import ObjectId
+
 from app.models.used_car import UsedCar
 from app.models.user import User, FavCar, Settings
 from app.models.kijiji_car import KijijiCar
@@ -12,6 +14,12 @@ from fastapi.responses import JSONResponse
 from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import AuthJWTException
 
+
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import Depends, status, HTTPException, Request
+from fastapi.responses import JSONResponse
+from fastapi_jwt_auth import AuthJWT
+from fastapi_jwt_auth.exceptions import AuthJWTException
 
 
 async def fetch_all_cars() -> list:
@@ -36,6 +44,40 @@ async def fetch_car_by_maker(maker: str) -> list:
     async for document in cursor:
         cars.append(document)
     return cars
+
+
+async def fetch_car_for_graph(maker: str) -> list:
+    cars = []
+    model_list = []
+    data_list = []
+    cursor = car_collection.find({"maker":maker})
+    async for document in cursor:
+        cars.append(document)
+        model_list.append(document['model'])
+        data_list.append([document['model'],document['madeYear'],document['mileage'], document['price'][0]['price']])
+
+    model_list = list(set(model_list))
+
+    filtered_list = []
+    for model in model_list:
+        filtered_data = []
+        for data in data_list:
+            if data[0] == model:
+                filtered_data.append({
+                    'year': data[1],
+                    'price': data[3],
+                    'mileage': data[2]
+                })
+        filtered_list.append(filtered_data)
+
+    graph_list = []
+    for i in range(0,len(model_list)):
+        graph_list.append({
+            'name': maker + " " + model_list[i],
+            'data': filtered_list[i]
+        })
+
+    return graph_list
 
 
 async def fetch_car_by_model(model: str) -> list:
@@ -76,6 +118,14 @@ async def fetch_car_by_price(id: int) -> list:
     async for document in cursor:
         cars.append(document)
     return cars
+
+
+async def add_fav_car(user_id:str ,fav_car: FavCar) -> object:
+    current_user = await user_collection.find_one({"_id":ObjectId(user_id)})
+    if (current_user['favouriteCar'].count(fav_car) == 0):
+        current_user['favouriteCar'].append(fav_car)
+    result = await user_collection.replace_one({"_id":ObjectId(user_id)},current_user)
+    return current_user
 
 
 async def register_user(request:User):

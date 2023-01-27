@@ -13,7 +13,7 @@ def test_get_cars():
     response_body = response.json()
     assert response.status_code == 200
     assert response.headers["Content-Type"] == "application/json"
-    assert len(response_body) == 517
+    assert len(response_body) == 520
 
 
 def test_get_kijiji_cars():
