@@ -9,6 +9,7 @@ class FavCar(BaseModel):
     madeYear: int
     mileage: int
     price: int
+    color: str
 
 
 class User(BaseModel):
