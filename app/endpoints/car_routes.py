@@ -1,6 +1,6 @@
 from fastapi import HTTPException, APIRouter
 
-from app.models.used_car import UsedCar
+from app.models.used_car import UsedCar, FavCar
 from app.models.user import User
 from app.services.database import (
     fetch_all_cars,

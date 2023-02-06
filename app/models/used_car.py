@@ -16,3 +16,11 @@ class UsedCar(BaseModel):
     url: str
     region: str
     color: str
+
+class FavCar(BaseModel):
+    maker: str
+    model: str
+    madeYear: int
+    mileage: int
+    price: int
+    color: str
