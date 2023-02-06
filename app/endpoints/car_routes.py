@@ -12,6 +12,9 @@ from app.services.database import (
     fetch_car_by_mileage,
     fetch_car_by_price,
     fetch_car_for_graph,
+    add_fav_car,
+    delete_fav_car,
+    fetch_fav_car
 )
 
 
@@ -86,3 +89,25 @@ async def get_car_by_price(id: int) -> list:
     if response:
         return response
     raise HTTPException(404, f"There is no car with the price")
+
+@router.post('/api/user/favcar/{user_id}', response_model=User)
+async def post_fav_car(user_id:str, fav_car:FavCar):
+    response = await add_fav_car(user_id, fav_car.dict())
+    if response:
+        return response
+    raise HTTPException(400, "There is no user which has user_id")
+
+
+@router.delete('/api/user/favcar/{user_id}', response_model=User)
+async def remove_fav_car(user_id:str, fav_car:FavCar):
+    response = await delete_fav_car(user_id, fav_car.dict())
+    if response:
+        return response
+    raise HTTPException(400, "There is no user which has user_id")
+
+@router.get('/api/user/favcar/{user_id}', response_model=list[FavCar])
+async def get_fav_car(user_id:str):
+    response = await fetch_fav_car(user_id)
+    if response:
+        return response
+    raise HTTPException(400, "There is no favourite car information")
