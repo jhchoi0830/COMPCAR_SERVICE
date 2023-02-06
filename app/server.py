@@ -9,6 +9,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:3000",
+    "compcar.netlify.app"
 ]
 
 app.add_middleware(  
