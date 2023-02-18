@@ -15,7 +15,7 @@ class FavCar(BaseModel):
 class User(BaseModel):
     email: str
     password: str
-    favouriteCar: Optional[List[FavCar]] = None
+    favouriteCar: Optional[List[FavCar]] = []
 
 
 class Settings(BaseModel):

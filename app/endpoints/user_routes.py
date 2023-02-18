@@ -8,6 +8,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.responses import JSONResponse
 from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import AuthJWTException
+from bson.objectid import ObjectId
 
 
 
@@ -29,12 +30,16 @@ async def create_user(request:User):
 @router.post('/api/user/login')
 async def login(request :User, Authorize: AuthJWT = Depends()):
     user = await login_user(request)
+    user_id = str(user["_id"])
     if user:
         access_token = Authorize.create_access_token(subject=user["email"])
         refresh_token = Authorize.create_refresh_token(subject=user["email"])
         Authorize.set_access_cookies(access_token)
         Authorize.set_refresh_cookies(refresh_token)
-        return {"res":"Successfully login"}
+        return {
+            "res":"Successfully login",
+            "userID":user_id
+            }
     return {"res":"coudln't find"}
 
 
